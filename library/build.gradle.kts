@@ -17,6 +17,7 @@ kotlin {
     iosX64()
     iosArm64()
     iosSimulatorArm64()
+    task("testClasses")
 
     sourceSets {
         val commonMain by getting {
