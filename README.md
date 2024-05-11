@@ -17,9 +17,9 @@ licensing, contribution guideline, code of conduct and others.
 1. - [x] Clone this repository ot just [use it as template](https://github.com/Kotlin/multiplatform-library-template/generate)
 1. - [ ] Edit library module name and include it in [`settings.gradle.kts`](settings.gradle.kts#L18)
 1. - [ ] Edit [`groupId` and `version`](convention-plugins/src/main/kotlin/module.publication.gradle.kts#L10-L11)
-    1. If you need the Android support update namespace [there](library/build.gradle.kts#L38) too
-    1. If you don't need an Android support delete the [`android` section](library/build.gradle.kts#L37-L43)
-1. - [ ] Edit [build targets you need](library/build.gradle.kts#L9-L21)
+    1. If you need the Android support update namespace [there](nfc_in_kmp/build.gradle.kts#L38) too
+    1. If you don't need an Android support delete the [`android` section](nfc_in_kmp/build.gradle.kts#L37-L43)
+1. - [ ] Edit [build targets you need](nfc_in_kmp/build.gradle.kts#L9-L21)
 
 At this stage, you have everything set to work with Kotlin Multiplatform. The project should be buildable (but you might need to provide actual starting values for the platforms you need).
 
@@ -57,3 +57,12 @@ The most part of the job is already automated for you. However, deployment to Ma
 1. - [ ] Call deployment manually when ready [in Actions](../../actions/workflows/deploy.yml) → `Run Workflow`
 1. - [ ] When you see in your account on https://oss.sonatype.org that everything is fine, you can release your staging repositories and add target `releaseSonatypeStagingRepository` to `deploy.yml` [after this line](.github/workflows/deploy.yml#L60). This way artifacts will be published to central automatically when tests pass.
 # nfc_in_kmp
+
+To test locally with iOS:
+
+If you're using XCode 15 or above:
+`export MODERN_XCODE_LINKER=true`
+First:
+`./gradlew clean && ./gradlew assemblexcframework`
+Then:
+`cp -r nfc_in_kmp/build/XCFrameworks/debug/nfc_in_kmp.xcframework .iosBuilds/`

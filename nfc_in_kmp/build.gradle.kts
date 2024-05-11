@@ -1,8 +1,15 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     id("module.publication")
 }
+
+// if you're using XCode 15 or after, you will need to set
+// export MODERN_XCODE_LINKER=true
+// in your CLI before running ./gradlew clean && ./gradlew assemblexcframework
+val isModernXcodeLinker = System.getenv("MODERN_XCODE_LINKER")?.toBoolean() ?: false
 
 kotlin {
     targetHierarchy.default()
@@ -14,9 +21,23 @@ kotlin {
             }
         }
     }
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
+    val xcf = XCFramework()
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach {
+        it.binaries.framework {
+            binaryOption("bundleId", "nfc_in_kmp")
+            baseName = "nfc_in_kmp"
+            if (isModernXcodeLinker) linkerOpts += "-ld64"
+            xcf.add(this)
+        }
+    }
+//
+//    iosX64()
+//    iosArm64()
+//    iosSimulatorArm64()
     task("testClasses")
 
     sourceSets {

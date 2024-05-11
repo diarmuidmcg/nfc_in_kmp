@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "nfc_in_kmp"
-include(":library")
+include(":nfc_in_kmp")

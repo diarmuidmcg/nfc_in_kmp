@@ -54,7 +54,7 @@ actual class NFCInteraction {
     ) : NSObject(), NFCNDEFReaderSessionDelegateProtocol {
 
         override fun readerSessionDidBecomeActive(session: NFCNDEFReaderSession) {
-            super.readerSessionDidBecomeActive(session)
+//            super.readerSessionDidBecomeActive(session)
         }
 
         override fun readerSession(session: NFCNDEFReaderSession, didDetectNDEFs: List<*>) {
