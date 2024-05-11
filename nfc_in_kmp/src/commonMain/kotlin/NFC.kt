@@ -1,30 +1,41 @@
-import model.NFCRecord
-import model.NFCTag
+import model.NFCRecordKMP
+import model.NFCTagKMP
 
-expect class NFCInteraction {
+expect class NFCInteractionKMP {
     constructor()
 
     suspend fun startReadSession(
-        typeOfNFCTag: NFCTag,
         customAlertMessage: String? = null,
         customErrorMessage: String? = null
-    ): NFCRecord?
+    ): NFCRecordKMP?
 
     suspend fun startWriteSession(
-        typeOfNFCTag: NFCTag,
+        message: String,
+        // url: String?
+        // is URI
+        // pass in locale
         customAlertMessage: String? = null,
         customErrorMessage: String? = null
-    ): NFCRecord?
+    ): NFCRecordKMP?
 }
 
-class NFC {
-    private val reader = NFCInteraction()
+class NFCInKMP {
+    private val reader = NFCInteractionKMP()
 
-    suspend fun startReading(typeOfNFCTag: NFCTag, customAlertMessage: String? = null, customErrorMessage: String? = null): NFCRecord? {
-        return reader.startReadSession(typeOfNFCTag, customAlertMessage, customErrorMessage)
+    suspend fun startReading(customAlertMessage: String? = null, customErrorMessage: String? = null): NFCRecordKMP? {
+        return reader.startReadSession(customAlertMessage, customErrorMessage)
     }
 
-    suspend fun startWriting(typeOfNFCTag: NFCTag, customAlertMessage: String? = null, customErrorMessage: String? = null): NFCRecord? {
-        return reader.startWriteSession(typeOfNFCTag, customAlertMessage, customErrorMessage)
+    suspend fun startWriting(message: String, customAlertMessage: String? = null, customErrorMessage: String? = null): NFCRecordKMP? {
+        return reader.startWriteSession(message, customAlertMessage, customErrorMessage)
     }
+
+
+    // startWriteAndLockSession
+
+    // startLockSession
+
+    // fetchUUIDSession
+
+    // startWriteAndFetchUUIDSession
 }

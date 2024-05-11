@@ -1,20 +1,19 @@
-import model.NFCRecord
-import model.NFCTag
+import model.NFCRecordKMP
+import model.NFCTagKMP
 
-actual class NFCInteraction {
+actual class NFCInteractionKMP {
     actual suspend fun startReadSession(
-        typeOfNFCTag: NFCTag,
         customAlertMessage: String?,
         customErrorMessage: String?
-    ): NFCRecord? {
+    ): NFCRecordKMP? {
         TODO("Not yet implemented")
     }
 
     actual suspend fun startWriteSession(
-        typeOfNFCTag: NFCTag,
+        message: String,
         customAlertMessage: String?,
         customErrorMessage: String?
-    ): NFCRecord? {
+    ): NFCRecordKMP? {
         TODO("Not yet implemented")
     }
 
