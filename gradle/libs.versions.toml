@@ -11,6 +11,7 @@ coroutines = "1.8.0"
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 nexus-publish = { module = "io.github.gradle-nexus.publish-plugin:io.github.gradle-nexus.publish-plugin.gradle.plugin", version.ref = "nexus-publish" }
+ui-text-android = { group = "androidx.compose.ui", name = "ui-text-android", version = "1.6.7" }
 
 [plugins]
 androidLibrary = { id = "com.android.library", version.ref = "agp" }

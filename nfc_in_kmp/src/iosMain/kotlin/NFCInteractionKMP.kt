@@ -1,3 +1,4 @@
+import model.NFCErrorKMP
 import model.NFCRecordKMP
 import platform.CoreNFC.NFCNDEFReaderSession
 
@@ -6,39 +7,33 @@ actual class NFCInteractionKMP {
 
     actual suspend fun startReadSession(
         customAlertMessage: String?,
-        customErrorMessage: String?
-    ): NFCRecordKMP? {
-        var returnNFCRecordKMP: NFCRecordKMP? = null
-        session = NFCNDEFReaderSession(NFCReaderSession(customAlertMessage) { success, mTag ->
-            if (success && mTag != null) {
-                returnNFCRecordKMP = mTag
-                session?.invalidateSession()
-            }
+        customErrorMessage: String?,
+        completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
+    ) {
+        session = NFCNDEFReaderSession(NFCReaderSession(customAlertMessage) { record, nfcTag ->
+            completionHandler(record, nfcTag)
         }, null, true)
         session?.let { strongSession ->
             customAlertMessage?.let { strongSession.alertMessage = it }
             strongSession.beginSession()
         }
-        return returnNFCRecordKMP
     }
 
     actual suspend fun startWriteSession(
-        message: String,
+        message: String?,
+        url: String?,
+        uri: String?,
+        locale: String,
         customAlertMessage: String?,
-        customErrorMessage: String?
-    ): NFCRecordKMP? {
-        var returnNFCRecordKMP: NFCRecordKMP? = null
-        session = NFCNDEFReaderSession(NFCWriterSession(message, customAlertMessage) { error ->
-            error?.let {
-                // tell use
-            } ?: // tell use success
-                session?.invalidateSession()
-
+        customErrorMessage: String?,
+        completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
+    ) {
+        session = NFCNDEFReaderSession(NFCWriterSession(message, url, uri, locale, customAlertMessage) { record, nfcTag ->
+            completionHandler(record, nfcTag)
         }, null, true)
         session?.let { strongSession ->
             customAlertMessage?.let { strongSession.alertMessage = it }
             strongSession.beginSession()
         }
-        return returnNFCRecordKMP
     }
 }

@@ -1,33 +1,57 @@
+import model.NFCErrorKMP
 import model.NFCRecordKMP
-import model.NFCTagKMP
+import utils.currentLocale
 
 expect class NFCInteractionKMP {
     constructor()
 
     suspend fun startReadSession(
         customAlertMessage: String? = null,
-        customErrorMessage: String? = null
-    ): NFCRecordKMP?
+        customErrorMessage: String? = null,
+        completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
+    )
 
     suspend fun startWriteSession(
-        message: String,
-        // url: String?
-        // is URI
-        // pass in locale
+        message: String? = null,
+        url: String? = null,
+        uri: String? = null,
+        locale: String = currentLocale,
         customAlertMessage: String? = null,
-        customErrorMessage: String? = null
-    ): NFCRecordKMP?
+        customErrorMessage: String? = null,
+        completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
+    )
 }
 
 class NFCInKMP {
     private val reader = NFCInteractionKMP()
 
-    suspend fun startReading(customAlertMessage: String? = null, customErrorMessage: String? = null): NFCRecordKMP? {
-        return reader.startReadSession(customAlertMessage, customErrorMessage)
+    suspend fun startReading(customAlertMessage: String? = null, customErrorMessage: String? = null, completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit) {
+         reader.startReadSession(customAlertMessage, customErrorMessage, completionHandler)
     }
 
-    suspend fun startWriting(message: String, customAlertMessage: String? = null, customErrorMessage: String? = null): NFCRecordKMP? {
-        return reader.startWriteSession(message, customAlertMessage, customErrorMessage)
+    suspend fun startWritingText(message: String, locale: String = currentLocale, customAlertMessage: String? = null, customErrorMessage: String? = null, completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit) {
+        reader.startWriteSession(
+            message = message,
+            locale = locale,
+            customAlertMessage = customAlertMessage,
+            customErrorMessage = customErrorMessage,
+            completionHandler = completionHandler)
+    }
+
+    suspend fun startWritingURL(url: String, customAlertMessage: String? = null, customErrorMessage: String? = null, completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit) {
+        reader.startWriteSession(
+            url = url,
+            customAlertMessage = customAlertMessage,
+            customErrorMessage = customErrorMessage,
+            completionHandler = completionHandler)
+    }
+
+    suspend fun startWritingURI(uri: String, customAlertMessage: String? = null, customErrorMessage: String? = null, completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit) {
+        reader.startWriteSession(
+            uri = uri,
+            customAlertMessage = customAlertMessage,
+            customErrorMessage = customErrorMessage,
+            completionHandler = completionHandler)
     }
 
 
