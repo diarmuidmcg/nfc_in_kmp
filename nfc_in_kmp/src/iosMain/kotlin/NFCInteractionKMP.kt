@@ -10,7 +10,7 @@ actual class NFCInteractionKMP {
         customErrorMessage: String?,
         completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
     ) {
-        session = NFCNDEFReaderSession(NFCReaderSession(customAlertMessage) { record, nfcTag ->
+        session = NFCNDEFReaderSession(NFCNDEFReaderSession(customAlertMessage) { record, nfcTag ->
             completionHandler(record, nfcTag)
         }, null, true)
         session?.let { strongSession ->
@@ -28,7 +28,7 @@ actual class NFCInteractionKMP {
         customErrorMessage: String?,
         completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
     ) {
-        session = NFCNDEFReaderSession(NFCWriterSession(message, url, uri, locale, customAlertMessage) { record, nfcTag ->
+        session = NFCNDEFReaderSession(NFCNDEFWriterSession(message, url, uri, locale, customAlertMessage) { record, nfcTag ->
             completionHandler(record, nfcTag)
         }, null, true)
         session?.let { strongSession ->
