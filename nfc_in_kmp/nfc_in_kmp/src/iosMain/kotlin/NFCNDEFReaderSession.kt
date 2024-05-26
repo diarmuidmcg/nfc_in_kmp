@@ -13,12 +13,11 @@ internal class NFCNDEFReaderSession(
     private val completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
 ) :  NSObject(), NFCNDEFReaderSessionDelegateProtocol {
 
-    private val nfcSessionDelegate = NFCSession(customErrorMessage, completionHandler)
+    private val nfcSessionDelegate = NFCSessionDelegate(customErrorMessage, completionHandler)
 
     override fun readerSessionDidBecomeActive(session: NFCNDEFReaderSession) {}
 
     override fun readerSession(session: NFCNDEFReaderSession, didDetectNDEFs: List<*>) {
-        println("reader session detected")
         val firstNDEF = didDetectNDEFs.firstOrNull()
 
         if (firstNDEF != null) {
@@ -30,8 +29,8 @@ internal class NFCNDEFReaderSession(
             )
             println("NFC: payload is ${returnRecord.payload}")
             nfcSessionDelegate.updateCurrentRecord(returnRecord)
-            session.invalidateSession()
-        } else completionHandler.invoke(null, NFCErrorKMP("", "No Tags found"))
+            nfcSessionDelegate.callCompletionHandler(null, session)
+        } else nfcSessionDelegate.callCompletionHandler(NFCErrorKMP("", "No Tags found"), session)
     }
 
     override fun readerSession(session: NFCNDEFReaderSession, didInvalidateWithError: NSError) {

@@ -1,22 +1,9 @@
 import model.NFCErrorKMP
 import model.NFCRecordKMP
-import platform.CoreNFC.NFCFeliCaTagProtocol
-import platform.CoreNFC.NFCISO15693TagProtocol
-import platform.CoreNFC.NFCISO7816TagProtocol
-import platform.CoreNFC.NFCMiFareTagProtocol
-import platform.CoreNFC.NFCNDEFMessage
-import platform.CoreNFC.NFCNDEFPayload
 import platform.CoreNFC.NFCNDEFReaderSession
 import platform.CoreNFC.NFCNDEFReaderSessionDelegateProtocol
 import platform.CoreNFC.NFCNDEFTagProtocol
-import platform.CoreNFC.NFCTagTypeMiFare
-import platform.CoreNFC.wellKnownTypeTextPayloadWithString
-import platform.CoreNFC.wellKnownTypeURIPayloadWithString
-import platform.CoreNFC.wellKnownTypeURIPayloadWithURL
 import platform.Foundation.NSError
-import platform.Foundation.NSFeatureUnsupportedError
-import platform.Foundation.NSLocale
-import platform.Foundation.NSURL
 import platform.darwin.NSObject
 
 typealias ShouldStopExecuting = Boolean
@@ -27,10 +14,10 @@ class NFCNDEFWriterSession(
     private val uri: String?,
     private val locale: String,
     customErrorMessage: String?,
-    private val completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
-) : NSObject(), NFCNDEFReaderSessionDelegateProtocol {
+    completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
+): NSObject(), NFCNDEFReaderSessionDelegateProtocol {
 
-    private val nfcSessionDelegate = NFCSession(customErrorMessage, completionHandler)
+    private val nfcSessionDelegate = NFCSessionDelegate(customErrorMessage, completionHandler)
 
     override fun readerSessionDidBecomeActive(session: NFCNDEFReaderSession) {}
 
@@ -53,7 +40,7 @@ class NFCNDEFWriterSession(
                 if (nfcSessionDelegate.errorShouldStopProgram(connectError, session)) return@connectToTag
                 nfcSessionDelegate.writeToTag(session, tag, messageToSend)
             }
-        } else completionHandler.invoke(null, NFCErrorKMP("", "No Tags found"))
+        } else nfcSessionDelegate.callCompletionHandler(NFCErrorKMP("", "No Tags found"), session)
     }
 
     override fun readerSession(session: NFCNDEFReaderSession, didInvalidateWithError: NSError) {
