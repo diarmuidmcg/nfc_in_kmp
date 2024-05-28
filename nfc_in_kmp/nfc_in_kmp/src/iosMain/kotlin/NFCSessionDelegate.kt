@@ -76,11 +76,7 @@ class NFCSessionDelegate(
     fun writeToTag(session: NFCReaderSession, tag: NFCNDEFTagProtocol, message: NFCNDEFMessage) {
 
         tag.queryNDEFStatusWithCompletionHandler { status, _, queryError ->
-            if (errorShouldStopProgram(
-                    queryError,
-                    session
-                )
-            ) return@queryNDEFStatusWithCompletionHandler
+            if (errorShouldStopProgram(queryError, session)) return@queryNDEFStatusWithCompletionHandler
             /* For NFCNDEF Status
                 case notSupported = 1
                 case readWrite = 2
@@ -96,7 +92,6 @@ class NFCSessionDelegate(
                                     record as? NFCNDEFPayload  // Safely cast each record to NFCNDEFPayload
                                 accumulatedValue + (ndefPayload?.payload ?: "")
                             }
-
                         val returnRecord = NFCRecordKMP(
                             identifier = null, // unfortunately we have no way of getting UUID
                             payload = returnPayload,
@@ -140,14 +135,6 @@ class NFCSessionDelegate(
                 updateCurrentRecord(returnRecord)
             }
         }
-    }
-
-    fun createNDEFMessage(message: String?, url: String?, uri: String?, locale: String): NFCNDEFMessage {
-        val payload = message?.let { msg -> NFCNDEFPayload.wellKnownTypeTextPayloadWithString(msg, locale = NSLocale(locale)) }
-            ?: url?.let { url -> NFCNDEFPayload.wellKnownTypeURIPayloadWithURL(NSURL(string = url)) }
-            ?: uri?.let { uri -> NFCNDEFPayload.wellKnownTypeURIPayloadWithString(uri) }
-
-        return NFCNDEFMessage(nDEFRecords = listOf(payload))
     }
 
     fun createNDEFMessage(message: NFCWriteMessageKMP): NFCNDEFMessage {

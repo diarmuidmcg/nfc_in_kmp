@@ -22,7 +22,7 @@ internal class NFCNDEFReaderSession(
 
         if (firstNDEF != null) {
             val tag = firstNDEF as NFCNDEFMessage
-            val firstRecord: NFCNDEFPayload = tag.records?.first() as NFCNDEFPayload
+            val firstRecord: NFCNDEFPayload = tag.records.first() as NFCNDEFPayload
 
             val returnRecord = NFCRecordKMP(
                 payload = if(firstRecord.payload.length.toInt() > 0) firstRecord.payload.toByteArray().decodeToString() else "",

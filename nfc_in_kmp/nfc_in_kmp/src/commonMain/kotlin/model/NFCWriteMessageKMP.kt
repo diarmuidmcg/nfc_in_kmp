@@ -2,7 +2,7 @@ package model
 
 import utils.currentLocale
 
-class NFCWriteMessageKMP(
+class NFCWriteMessageKMP private constructor(
     public val textMessage: String?,
     public val url: String?,
     public val uri: String?,

@@ -1,5 +1,6 @@
 import model.NFCErrorKMP
 import model.NFCRecordKMP
+import model.NFCWriteMessageKMP
 import platform.CoreNFC.NFCNDEFReaderSession
 import platform.CoreNFC.NFCNDEFReaderSessionDelegateProtocol
 import platform.CoreNFC.NFCNDEFTagProtocol
@@ -9,10 +10,7 @@ import platform.darwin.NSObject
 typealias ShouldStopExecuting = Boolean
 
 class NFCNDEFWriterSession(
-    private val message: String?,
-    private val url: String?,
-    private val uri: String?,
-    private val locale: String,
+    private val message: NFCWriteMessageKMP,
     customErrorMessage: String?,
     completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
 ): NSObject(), NFCNDEFReaderSessionDelegateProtocol {
@@ -35,7 +33,7 @@ class NFCNDEFWriterSession(
 
         if (firstTag != null) {
             val tag: NFCNDEFTagProtocol = firstTag as NFCNDEFTagProtocol
-            val messageToSend = nfcSessionDelegate.createNDEFMessage(message, url, uri, locale)
+            val messageToSend = nfcSessionDelegate.createNDEFMessage(message)
             session.connectToTag(tag) { connectError ->
                 if (nfcSessionDelegate.errorShouldStopProgram(connectError, session)) return@connectToTag
                 nfcSessionDelegate.writeToTag(session, tag, messageToSend)
