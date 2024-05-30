@@ -9,6 +9,7 @@ import platform.darwin.NSObject
 
 typealias ShouldStopExecuting = Boolean
 
+@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
 class NFCNDEFWriterSession(
     private val message: NFCWriteMessageKMP,
     customErrorMessage: String?,

@@ -8,6 +8,7 @@ import platform.Foundation.NSError
 import platform.darwin.NSObject
 import utils.toByteArray
 
+@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
 internal class NFCNDEFReaderSession(
     customErrorMessage: String?,
     private val completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit

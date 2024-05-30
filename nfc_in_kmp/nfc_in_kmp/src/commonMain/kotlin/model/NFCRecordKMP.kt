@@ -1,6 +1,6 @@
 package model
 
-class NFCRecordKMP(
+data class NFCRecordKMP(
     val identifier: String? = null,
     val payload: String? = null,
     val type: Any? = null,

@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
@@ -12,7 +13,7 @@ plugins {
 val isModernXcodeLinker = System.getenv("MODERN_XCODE_LINKER")?.toBoolean() ?: false
 
 kotlin {
-    targetHierarchy.default()
+    applyDefaultHierarchyTemplate()
     androidTarget {
         publishLibraryVariants("release")
         compilations.all {
@@ -34,16 +35,13 @@ kotlin {
             xcf.add(this)
         }
     }
-//
-//    iosX64()
-//    iosArm64()
-//    iosSimulatorArm64()
+
     task("testClasses")
 
     sourceSets {
         val commonMain by getting {
             dependencies {
-//                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.coroutines.core)
             }
         }
         val commonTest by getting {

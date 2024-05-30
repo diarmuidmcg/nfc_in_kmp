@@ -8,6 +8,7 @@ import platform.CoreNFC.NFCPollingISO15693
 import platform.CoreNFC.NFCPollingOption
 import platform.CoreNFC.NFCTagReaderSession
 
+@Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class NFCInteractionKMP {
     private var ndefSession: NFCNDEFReaderSession? = null
     private var tagSession: NFCTagReaderSession? = null
