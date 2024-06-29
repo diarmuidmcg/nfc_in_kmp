@@ -10,7 +10,7 @@ class NFCInKMP {
 
     /// This is used to get any tag to read
     /// on iOS, this will not return the UUID or specific platform tag information
-    suspend fun startGeneralReading(customAlertMessage: String? = null, customErrorMessage: String? = null, completionHandler: (NFCResult) -> Unit) {
+    suspend fun startGeneralNFCReading(customAlertMessage: String? = null, customErrorMessage: String? = null, completionHandler: (NFCResult) -> Unit) {
         reader.startGeneralTagReadSession(customAlertMessage, customErrorMessage, completionHandler)
     }
 

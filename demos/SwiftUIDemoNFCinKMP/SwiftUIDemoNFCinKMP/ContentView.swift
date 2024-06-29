@@ -7,37 +7,13 @@
 
 import SwiftUI
 import nfc_in_kmp
-import CoreNFC
 
 struct ContentView: View {
     
     @SwiftUI.State var payloadOnTag: String? = nil
     @SwiftUI.State var uuid: String? = nil
     @SwiftUI.State var errorFromTag: String? = nil
-    
-//    func demoCompletionHandlerExecution(record: NFCRecordKMP?, error: NFCErrorKMP?) {
-//        if let record {
-//            payloadOnTag = record.payload
-//            uuid = record.identifier
-//        } else {
-//            payloadOnTag = nil
-//            uuid = nil
-//        }
-//        if let error { errorFromTag = error.message} else { errorFromTag = nil }
-//    }
-//    func demoCompletionHandlerExecution(result: NFCResult<NFCRecordKMP, NFCErrorKMP>) {
-//        
-//        switch result {
-//        case let record as Success<NFCRecordKMP>:
-//            payloadOnTag = record.payload
-//            uuid = record.identifier
-//        is Failure:
-//            errorFromTag = error.message
-//        default:
-//            break
-//        }
-//    
-//    }
+    let nfcInKMP = NFCInKMP()
     
     func demoCompletionHandlerExecution(result: NFCResult) {
         switch result {
@@ -51,13 +27,20 @@ struct ContentView: View {
         }
     }
     
+    func removePreviousRecordAndError() {
+        payloadOnTag = nil
+        uuid = nil
+        errorFromTag = nil
+    }
+    
     func launchGeneralNFCReading() {
+        removePreviousRecordAndError()
         // Kotlin Suspend functions must be called from the main thread
         DispatchQueue.main.async {
             // we use Tasks due to the async nature of Kotlin Suspend Functions
             Task {
                 do {
-                    try await NFCInKMP().startGeneralReading(
+                    try await nfcInKMP.startGeneralNFCReading(
                         customAlertMessage: nil,
                         customErrorMessage: nil,
                         completionHandler: demoCompletionHandlerExecution)
@@ -67,12 +50,13 @@ struct ContentView: View {
     }
     
     func launchMifareNFCReading() {
+        removePreviousRecordAndError()
         // Kotlin Suspend functions must be called from the main thread
         DispatchQueue.main.async {
             // we use Tasks due to the async nature of Kotlin Suspend Functions
             Task {
                 do {
-                    try await NFCInKMP().startReadingMifare(
+                    try await nfcInKMP.startReadingMifare(
                         customAlertMessage: nil,
                         customErrorMessage: nil,
                         completionHandler: demoCompletionHandlerExecution)
@@ -82,10 +66,11 @@ struct ContentView: View {
     }
     
     func launchNFCWritingText() {
+        removePreviousRecordAndError()
         DispatchQueue.main.async {
             Task {
                 do {
-                    try await NFCInKMP().startWritingText(
+                    try await nfcInKMP.startWritingText(
                         message: "Bonjour",
                         locale: "en_UK",
                         customAlertMessage: nil,
@@ -97,10 +82,11 @@ struct ContentView: View {
     }
     
     func launchNFCWritingURL() {
+        removePreviousRecordAndError()
         DispatchQueue.main.async {
             Task {
                 do {
-                    try await NFCInKMP().startWritingURL(
+                    try await nfcInKMP.startWritingURL(
                         url: "www.fonzmusic.com",
                         customAlertMessage: nil,
                         customErrorMessage: nil,
@@ -111,10 +97,11 @@ struct ContentView: View {
     }
     
     func launchNFCWritingURI() {
+        removePreviousRecordAndError()
         DispatchQueue.main.async {
             Task {
                 do {
-                    try await NFCInKMP().startWritingURI(
+                    try await nfcInKMP.startWritingURI(
                         uri: "/diarmuiddevs/sources/nfc_in_kmp",
                         customAlertMessage: nil,
                         customErrorMessage: nil,
