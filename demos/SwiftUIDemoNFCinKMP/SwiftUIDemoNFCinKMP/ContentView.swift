@@ -15,24 +15,64 @@ struct ContentView: View {
     @SwiftUI.State var uuid: String? = nil
     @SwiftUI.State var errorFromTag: String? = nil
     
-    func demoCompletionHandlerExecution(record: NFCRecordKMP?, error: NFCErrorKMP?) {
-        if let record {
-            payloadOnTag = record.payload
-            uuid = record.identifier
-        } else {
-            payloadOnTag = nil
-            uuid = nil
+//    func demoCompletionHandlerExecution(record: NFCRecordKMP?, error: NFCErrorKMP?) {
+//        if let record {
+//            payloadOnTag = record.payload
+//            uuid = record.identifier
+//        } else {
+//            payloadOnTag = nil
+//            uuid = nil
+//        }
+//        if let error { errorFromTag = error.message} else { errorFromTag = nil }
+//    }
+//    func demoCompletionHandlerExecution(result: NFCResult<NFCRecordKMP, NFCErrorKMP>) {
+//        
+//        switch result {
+//        case let record as Success<NFCRecordKMP>:
+//            payloadOnTag = record.payload
+//            uuid = record.identifier
+//        is Failure:
+//            errorFromTag = error.message
+//        default:
+//            break
+//        }
+//    
+//    }
+    
+    func demoCompletionHandlerExecution(result: NFCResult) {
+        switch result {
+        case let success as NFCResult.Success:
+            payloadOnTag = success.record.payload
+            uuid = success.record.identifier
+        case let error as NFCResult.Failure:
+            errorFromTag = error.error.message
+        default:
+            break
         }
-        if let error { errorFromTag = error.message} else { errorFromTag = nil }
     }
     
-    func launchNFCReading() {
+    func launchGeneralNFCReading() {
         // Kotlin Suspend functions must be called from the main thread
         DispatchQueue.main.async {
             // we use Tasks due to the async nature of Kotlin Suspend Functions
             Task {
                 do {
-                    try await NFCInKMP().startReading(
+                    try await NFCInKMP().startGeneralReading(
+                        customAlertMessage: nil,
+                        customErrorMessage: nil,
+                        completionHandler: demoCompletionHandlerExecution)
+                }
+            }
+        }
+    }
+    
+    func launchMifareNFCReading() {
+        // Kotlin Suspend functions must be called from the main thread
+        DispatchQueue.main.async {
+            // we use Tasks due to the async nature of Kotlin Suspend Functions
+            Task {
+                do {
+                    try await NFCInKMP().startReadingMifare(
                         customAlertMessage: nil,
                         customErrorMessage: nil,
                         completionHandler: demoCompletionHandlerExecution)
@@ -88,7 +128,8 @@ struct ContentView: View {
         VStack(spacing: 10) {
             Image(systemName: "sensor.tag.radiowaves.forward.fill")
                 .imageScale(.large)
-            Button(action: launchNFCReading, label: { Text("Read NFC") })
+            Button(action: launchGeneralNFCReading, label: { Text("General Read NFC") })
+            Button(action: launchMifareNFCReading, label: { Text("Mifare Read NFC") })
             Button(action: launchNFCWritingText, label: { Text("Write NFC with Text") })
             Button(action: launchNFCWritingURL, label: { Text("Write NFC with URL") })
             Button(action: launchNFCWritingURI, label: { Text("Write NFC with URI") })
