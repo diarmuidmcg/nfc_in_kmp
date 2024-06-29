@@ -12,8 +12,7 @@ import utils.toByteArray
 @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
 internal class NFCNDEFReaderSession(
     customErrorMessage: String?,
-//    private val completionHandler: (NFCResultType<NFCRecordKMP, NFCErrorKMP>) -> Unit
-    private val completionHandler: (NFCResult) -> Unit
+    completionHandler: (NFCResult) -> Unit
 ) :  NSObject(), NFCNDEFReaderSessionDelegateProtocol {
 
     private val nfcSessionDelegate = NFCSessionDelegate(customErrorMessage, completionHandler)

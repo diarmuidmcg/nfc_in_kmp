@@ -6,12 +6,6 @@ import model.TypesOfTags
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 expect class NFCInteractionKMP() {
-//    suspend fun startGeneralTagReadSession(
-//        customAlertMessage: String? = null,
-//        customErrorMessage: String? = null,
-//        completionHandler: (NFCResultType<NFCRecordKMP, NFCErrorKMP>) -> Unit
-//    )
-
     suspend fun startGeneralTagReadSession(
         customAlertMessage: String? = null,
         customErrorMessage: String? = null,

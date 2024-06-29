@@ -1,5 +1,4 @@
 import model.NFCErrorKMP
-import model.NFCRecordKMP
 import model.NFCResult
 import platform.CoreNFC.NFCTagProtocol
 import platform.CoreNFC.NFCTagReaderSession

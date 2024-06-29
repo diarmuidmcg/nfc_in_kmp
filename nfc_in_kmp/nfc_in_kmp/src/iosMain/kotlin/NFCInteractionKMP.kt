@@ -1,5 +1,3 @@
-import model.NFCErrorKMP
-import model.NFCRecordKMP
 import model.NFCResult
 import model.NFCWriteMessageKMP
 import model.TypesOfTags
@@ -13,16 +11,11 @@ actual class NFCInteractionKMP {
     private var ndefSession: NFCNDEFReaderSession? = null
     private var tagSession: NFCTagReaderSession? = null
 
-//    actual suspend fun startGeneralTagReadSession(
-//        customAlertMessage: String?,
-//        customErrorMessage: String?,
-//        completionHandler: (NFCResultType<NFCRecordKMP, NFCErrorKMP>) -> Unit
-//    ) {
-actual suspend fun startGeneralTagReadSession(
-    customAlertMessage: String?,
-    customErrorMessage: String?,
-    completionHandler: (NFCResult) -> Unit
-) {
+    actual suspend fun startGeneralTagReadSession(
+        customAlertMessage: String?,
+        customErrorMessage: String?,
+        completionHandler: (NFCResult) -> Unit
+    ) {
         ndefSession = NFCNDEFReaderSession(NFCNDEFReaderSession(customAlertMessage) { record ->
             completionHandler(record)
         }, queue = null, invalidateAfterFirstRead = true)

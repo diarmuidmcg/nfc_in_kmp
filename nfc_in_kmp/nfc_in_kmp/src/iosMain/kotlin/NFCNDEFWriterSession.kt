@@ -1,5 +1,4 @@
 import model.NFCErrorKMP
-import model.NFCRecordKMP
 import model.NFCResult
 import model.NFCWriteMessageKMP
 import platform.CoreNFC.NFCNDEFReaderSession
