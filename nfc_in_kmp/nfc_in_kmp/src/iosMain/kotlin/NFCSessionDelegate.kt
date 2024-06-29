@@ -24,13 +24,14 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import model.NFCResult
 
 // I would have liked to create an abstract class for all my NFCSessions to inherit, but
 // Classes cannot inherit from Objective C AND Kotlin classes/interfaces
 // Therefore, I just create an instance of NFCSession on all my Super NFCSessions
 interface NFCSessionDelegateProtocol {
     val customErrorMessage: String?
-    val completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
+    val completionHandler: (NFCResult) -> Unit
     fun updateCurrentRecord(newNFCRecordKMP: NFCRecordKMP)
     fun callCompletionHandler(error: NFCErrorKMP?, session: NFCReaderSession)
     fun errorShouldStopProgram(connectError: NSError?, session: NFCReaderSession): ShouldStopExecuting
@@ -38,7 +39,7 @@ interface NFCSessionDelegateProtocol {
 
 class NFCSessionDelegate(
     override val customErrorMessage: String?,
-    override val completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
+    override val completionHandler: (NFCResult) -> Unit
 ) : NFCSessionDelegateProtocol, CoroutineScope by MainScope() {
     private var currentRecord: NFCRecordKMP? = null
 
@@ -49,9 +50,7 @@ class NFCSessionDelegate(
     private val mutex = Mutex()
 
     private suspend fun updateCurrentRecordWithMutex(newNFCRecordKMP: NFCRecordKMP) {
-        print("calling updateCurrentRecordWithMutex with $newNFCRecordKMP\n")
         mutex.withLock {
-            print("mutex locked in updateCurrentRecordWithMutex\n")
             currentRecord = if (currentRecord == null) newNFCRecordKMP
             else {
                 currentRecord?.copy(
@@ -62,28 +61,26 @@ class NFCSessionDelegate(
                 )
             }
         }
-        print("mutex unlocked in updateCurrentRecordWithMutex\n")
     }
 
     override fun updateCurrentRecord(newNFCRecordKMP: NFCRecordKMP) {
         launch(coroutineHandler) { updateCurrentRecordWithMutex(newNFCRecordKMP) }
     }
 
-    private fun onDestroy() {
-        cancel() // this will cancel the MainScope
-    }
+    private fun onDestroy() = cancel() // this will cancel the MainScope
 
     override fun callCompletionHandler(error: NFCErrorKMP?, session: NFCReaderSession) {
-        print("calling callCompletionHandler\n")
         launch(coroutineHandler) {
             mutex.withLock {
-                print("mutex locked in callCompletionHandler\n")
-                print("callCompletionHandler currentRecord is $currentRecord\n")
-                completionHandler.invoke(currentRecord, error)
+                val safeRecord = currentRecord // because currentRecord is mutable, smart cast doesnt work by default
+
+                if (safeRecord != null) completionHandler.invoke(NFCResult.Success(safeRecord))
+                else if (error != null) completionHandler.invoke(NFCResult.Failure(error))
+                else completionHandler.invoke(NFCResult.Failure(NFCErrorKMP.unknownError))
+
                 session.invalidateSession()
                 onDestroy()
             }
-            print("mutex unlocked in callCompletionHandler\n")
         }
     }
 
@@ -93,8 +90,6 @@ class NFCSessionDelegate(
         session: NFCReaderSession
     ): ShouldStopExecuting {
         connectError?.let {
-            println("there is error")
-            println("error is ${it.localizedDescription}")
             customErrorMessage?.let { errMsg ->
                 session.invalidateSessionWithErrorMessage(errMsg)
             } ?: session.invalidateSession()

@@ -1,7 +1,6 @@
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.MainScope
 import model.NFCErrorKMP
 import model.NFCRecordKMP
+import model.NFCResult
 import platform.CoreNFC.NFCTagProtocol
 import platform.CoreNFC.NFCTagReaderSession
 import platform.CoreNFC.NFCTagReaderSessionDelegateProtocol
@@ -10,8 +9,8 @@ import platform.darwin.NSObject
 
 internal class NFCTagReaderSessionKMP(
     customErrorMessage: String?,
-    completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
-):  NSObject(), NFCTagReaderSessionDelegateProtocol, CoroutineScope by MainScope() {
+    completionHandler: (NFCResult) -> Unit
+):  NSObject(), NFCTagReaderSessionDelegateProtocol {
 
     private val nfcSessionDelegate = NFCSessionDelegate(customErrorMessage, completionHandler)
 

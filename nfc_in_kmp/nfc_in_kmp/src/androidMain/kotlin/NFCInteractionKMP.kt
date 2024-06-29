@@ -8,7 +8,7 @@ actual class NFCInteractionKMP {
     actual suspend fun startGeneralTagReadSession(
         customAlertMessage: String?,
         customErrorMessage: String?,
-        completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
+        completionHandler: (NFCResultType<NFCRecordKMP, NFCErrorKMP>) -> Unit
     ) {
         TODO("Not yet implemented")
     }
@@ -17,7 +17,7 @@ actual class NFCInteractionKMP {
         tagToFind: TypesOfTags,
         customAlertMessage: String?,
         customErrorMessage: String?,
-        completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
+        completionHandler: (NFCResultType<NFCRecordKMP, NFCErrorKMP>) -> Unit
     ) {
         TODO("Not yet implemented")
     }
@@ -26,7 +26,7 @@ actual class NFCInteractionKMP {
         message: NFCWriteMessageKMP,
         customAlertMessage: String?,
         customErrorMessage: String?,
-        completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
+        completionHandler: (NFCResultType<NFCRecordKMP, NFCErrorKMP>) -> Unit
     ) {
         TODO("Not yet implemented")
     }

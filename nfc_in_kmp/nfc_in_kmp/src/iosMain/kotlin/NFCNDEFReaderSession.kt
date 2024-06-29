@@ -1,5 +1,6 @@
 import model.NFCErrorKMP
 import model.NFCRecordKMP
+import model.NFCResult
 import platform.CoreNFC.NFCNDEFMessage
 import platform.CoreNFC.NFCNDEFPayload
 import platform.CoreNFC.NFCNDEFReaderSession
@@ -11,7 +12,8 @@ import utils.toByteArray
 @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
 internal class NFCNDEFReaderSession(
     customErrorMessage: String?,
-    private val completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
+//    private val completionHandler: (NFCResultType<NFCRecordKMP, NFCErrorKMP>) -> Unit
+    private val completionHandler: (NFCResult) -> Unit
 ) :  NSObject(), NFCNDEFReaderSessionDelegateProtocol {
 
     private val nfcSessionDelegate = NFCSessionDelegate(customErrorMessage, completionHandler)

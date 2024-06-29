@@ -5,4 +5,8 @@ class NFCErrorKMP(
     val message: String,
     val errorReason: String? = null,
     val recoverySuggestion: String? = null
-)
+) {
+    companion object {
+        val unknownError = NFCErrorKMP("UNKNOWN", "Unknown error")
+    }
+}

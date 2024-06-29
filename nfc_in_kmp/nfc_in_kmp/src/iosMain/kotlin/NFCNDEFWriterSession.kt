@@ -1,5 +1,6 @@
 import model.NFCErrorKMP
 import model.NFCRecordKMP
+import model.NFCResult
 import model.NFCWriteMessageKMP
 import platform.CoreNFC.NFCNDEFReaderSession
 import platform.CoreNFC.NFCNDEFReaderSessionDelegateProtocol
@@ -13,7 +14,7 @@ typealias ShouldStopExecuting = Boolean
 class NFCNDEFWriterSession(
     private val message: NFCWriteMessageKMP,
     customErrorMessage: String?,
-    completionHandler: (record: NFCRecordKMP?, error: NFCErrorKMP?) -> Unit
+    completionHandler: (NFCResult) -> Unit
 ): NSObject(), NFCNDEFReaderSessionDelegateProtocol {
 
     private val nfcSessionDelegate = NFCSessionDelegate(customErrorMessage, completionHandler)
